@@ -2,6 +2,7 @@ from flask.ext.wtf import Form
 from wtforms import StringField,PasswordField,SubmitField,BooleanField
 from wtforms.validators import Required, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
+from ..models import User,Role
 
 class LoginForm(Form):
 	email = StringField('Email',validators=[Required(),Email(),Length(1,64)])
@@ -22,3 +23,26 @@ class RegisterForm(Form):
 	def validate_email(self,field):
 		if User.query.filter_by(email=field.data).first():
 			raise ValidationError('Email already Register')
+	def validate_username(self,field):
+		if User.query.filter_by(username=field.data).first():
+			raise ValidationError('Username already in use.')
+
+class ChangePasswordForm(Form):
+	old_password = PasswordField('Old Password',validators=[Required()])
+	password = PasswordField('New Password',validators=[Required(),
+		EqualTo('password2',message='Password must match')])
+	password2 = PasswordField('Confirm Password',validators=[Required()])
+	submit = SubmitField('Submit')
+
+class ResetPasswordRequestForm(Form):
+	email = StringField('You Accout Email',validators=[Required(), Email(),
+		Length(1,64)])
+	submit = SubmitField('Submit')
+
+class ResetPasswordForm(Form):
+	email = StringField('You Accout Email',validators=[Required(),
+		Email(),Length(1,64)])
+	password = PasswordField('Password',validators=[Required(),
+		EqualTo('password2',message='Password must match')])
+	password2 = PasswordField('Confirm Password',validators=[Required()])
+	submit = SubmitField('Submit')
