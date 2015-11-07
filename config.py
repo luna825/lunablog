@@ -11,8 +11,8 @@ class Config:
 	MAIL_SERVER = 'smtp.qq.com'
 	MAIL_PORT = 465
 	MAIL_USE_SSL = True
-	MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'luna825@qq.com'
-	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'luna850810'
+	MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
 	@staticmethod
 	def init_app(app):
