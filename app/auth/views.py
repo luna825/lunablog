@@ -15,7 +15,7 @@ def login():
 		if user is not None and user.verify_password(form.password.data):
 			login_user(user,form.remember_me.data)
 			return redirect(request.args.get('next') or url_for('main.index'))
-		flash('Invalid email or password')
+		flash('Invalid email or password','danger')
 	return render_template('auth/login.html',form=form)
 
 @auth.route('/logout')
@@ -81,7 +81,7 @@ def change_password():
 		if current_user.verify_password(form.old_password.data):
 			current_user.password = form.password.data
 			db.session.add(current_user)
-			flash('You password have been update')
+			flash('You password have been update','success')
 			return redirect(url_for('main.index'))
 		else:
 			flash('Invalid password')
