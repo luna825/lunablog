@@ -1,4 +1,5 @@
 import unittest,time
+from datetime import datetime
 from app import db,create_app
 from app.models import User,Role,Permission,AnonymousUser
 
@@ -76,3 +77,19 @@ class ModelTestCase(unittest.TestCase):
 	def test_anonymous_user(self):
 		u = AnonymousUser()
 		self.assertFalse(u.can(Permission.FOLLOW))
+
+	def test_timestamps(self):
+		u = User(password='cat')
+		db.session.add(u)
+		db.session.commit()
+		self.assertTrue((datetime.utcnow()-u.member_since).total_seconds() < 3)
+		self.assertTrue((datetime.utcnow()-u.member_since).total_seconds() < 3)
+
+	def test_ping(self):
+		u = User(password='cat')
+		db.session.add(u)
+		db.session.commit()
+		last_seen_before = u.last_seen
+		time.sleep(2)
+		u.ping()
+		self.assertTrue(u.last_seen>last_seen_before)
