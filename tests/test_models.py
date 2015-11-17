@@ -9,7 +9,6 @@ class ModelTestCase(unittest.TestCase):
 		self.app_context = self.app.app_context() 
 		self.app_context.push()
 		db.create_all()
-		self.client = self.app.test_client(use_cookies = True)
 
 
 	def tearDown(self):
@@ -93,3 +92,22 @@ class ModelTestCase(unittest.TestCase):
 		time.sleep(2)
 		u.ping()
 		self.assertTrue(u.last_seen>last_seen_before)
+
+	def test_gravatar(self):
+		u = User(email='john@example.com',password='cat')
+		with self.app.test_request_context('/'):
+			gravatar = u.gravatar()
+			gravatar_256 = u.gravatar(size=256)
+			gravatar_pg = u.gravatar(rating='pg')
+			gravatar_retro = u.gravatar(default='retro')
+		self.assertTrue('http://gravatar.duoshuo.com/avatar/' +
+                        'd4c74594d841139328695756648b6bd6'in gravatar)
+		self.assertTrue('s=256' in gravatar_256)
+		self.assertTrue('r=pg' in gravatar_pg)
+		self.assertTrue('d=retro' in gravatar_retro)
+
+		with self.app.test_request_context('/',base_url='https://example.com'):
+			gravatar_ssl = u.gravatar()
+		self.assertTrue('https://secure.gravatar.com/avatar/' +
+                        'd4c74594d841139328695756648b6bd6' in gravatar_ssl)
+

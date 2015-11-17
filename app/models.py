@@ -1,8 +1,9 @@
+import hashlib
 from datetime import datetime
 from . import db,login_manager
 from flask.ext.login import UserMixin,AnonymousUserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
-from flask import current_app
+from flask import current_app,request
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
@@ -27,6 +28,7 @@ class User(db.Model,UserMixin):
 	about_me=db.Column(db.Text())
 	member_since = db.Column(db.DateTime(),default=datetime.utcnow)
 	last_seen = db.Column(db.DateTime(),default = datetime.utcnow)
+	avatar_hash = db.Column(db.String(32))
 
 
 	def __init__(self,**kwargs):
@@ -36,10 +38,23 @@ class User(db.Model,UserMixin):
 				self.role = Role.query.filter_by(permission = 0xff).first()
 			else:
 				self.role = Role.query.filter_by(default=True).first()
+		if self.email is not None and self.avatar_hash is None:
+			self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
 
 	def ping(self):
 		self.last_seen = datetime.utcnow()
 		db.session.add(self)
+
+	#head gravatar
+	def gravatar(self,size=100,default='identicon',rating='g'):
+		if request.is_secure:
+			url = 'https://secure.gravatar.com/avatar'
+		else:
+			url = 'http://gravatar.duoshuo.com/avatar'
+		hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
+		return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+			url=url,hash=hash,size=size,default=default,rating=rating)
+
 
 	#password hash
 	@property

@@ -1,0 +1,7 @@
+.profile-thumbnail {
+    position: absolute;/*绝对定位*/
+}
+.profile-header {
+    min-height: 260px; /*min-height 属性设置元素的最小高度*/
+    margin-left: 280px; /*margin 外边距属性*/
+}

@@ -10,7 +10,7 @@ class EditProfileForm(Form):
 	about_me = TextAreaField('About me')
 	submit = SubmitField('Submit')
 
-class EditProfileForm(Form):
+class EditProfileAdminForm(Form):
 	email = StringField('Email',validators=[Required(),Email(),Length(1,64)])
 	username = StringField('Username',validators=[Required(),Length(1,64),
 		Regexp('^[A-Za-z][A-Za-z0-9_.]*$',0,'Username must have only letter,\
@@ -23,7 +23,7 @@ class EditProfileForm(Form):
 	submit = SubmitField('Submit')
 
 	def __init__(self,user,*args,**kwargs):
-		super(EditProfileForm,self).__init__(*args,**kwargs)
+		super(EditProfileAdminForm,self).__init__(*args,**kwargs)
 		self.role.choices = [(role.id,role.name) for role in Role.query.order_by(Role.name).all()]
 		self.user = user
 
