@@ -3,11 +3,13 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.mail import Mail
+from flask.ext.moment import Moment
 from config import config
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
 mail = Mail()
+moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.session_protection = 'strong'
@@ -20,6 +22,7 @@ def create_app(config_name):
 	db.init_app(app)
 	bootstrap.init_app(app)
 	mail.init_app(app)
+	moment.init_app(app)
 	login_manager.init_app(app)
 
 

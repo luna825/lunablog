@@ -22,7 +22,7 @@ class FlaskClientTestCase(unittest.TestCase):
 		response = self.client.get(url_for('main.index'))
 		self.assertTrue('Stanger' in response.get_data(as_text=True))
 
-	def test_register_login(self):
+	def test_register_login_profile_logout(self):
 		response = self.client.post(url_for('auth.register'),data={
 			'email':'john@example.com',
 			'username':'john',
@@ -56,6 +56,10 @@ class FlaskClientTestCase(unittest.TestCase):
 
 		user = User.query.filter_by(username='john').first()
 		self.assertTrue(user.verify_password('dog'))
+
+		response = self.client.get(url_for('main.user',username = user.username),follow_redirects=True)
+		data = response.get_data(as_text=True)
+		self.assertTrue('Member since' in data)
 
 		response = self.client.get(url_for('auth.logout'),follow_redirects=True)
 		data = response.get_data(as_text=True)
