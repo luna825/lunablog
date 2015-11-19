@@ -1,3 +1,8 @@
+import sys
+default_encoding = 'utf-8'
+if sys.getdefaultencoding() != default_encoding:
+    reload(sys)
+    sys.setdefaultencoding(default_encoding)
 import os
 from app import create_app,db
 from app.models import User,Role,Permission,Post
