@@ -6,6 +6,7 @@ class Config:
 	SECRET_KEY = 'hard to guess string'
 	SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
+	FLASK_POSTS_PER_PAGE = 10
 	FLASKY_MAIL_SUJECT_PREFIX = '[Flasky]'
 	FLASKY_MAIL_SENDER = 'Flasky Admin <luna825@qq.com>'
 	MAIL_SERVER = 'smtp.qq.com'
