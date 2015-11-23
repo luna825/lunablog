@@ -25,3 +25,4 @@ bleach
 flask-pagedown
 html5lib
 markdown
+flask-httpauth
